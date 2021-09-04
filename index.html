@@ -3,6 +3,7 @@
 <head>
 		<title> NFT Generation </title>
 		<script src="./js/jquery.js"></script>
+		<script src="./js/web3.js"></script>
 		<script src="https://unpkg.com/konva@8/konva.min.js"></script>
 		<style>
 			.header {
@@ -29,6 +30,15 @@
 </html>
 
 <script>
+	<!-- load our web3 stuff -->
+	$(function() {
+		var web3 = new Web3(new Web3.providers.HttpProvider('https://jefff000.github.io/nft-generation:8545'));
+		web3.eth.getGasPrice().then((result) => {
+		  console.log(web3.utils.fromWei(result, 'ether'));
+		})
+	});	
+	<!-- end -->
+
 	function random_number(lower, upper) {
 		return Math.floor(Math.random() * (upper - lower) + lower);
 	}
