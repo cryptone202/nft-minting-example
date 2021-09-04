@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+		<title> NFT Generation </title>
+		<script src="./js/jquery.js"></script>
+		<script src="https://unpkg.com/konva@8/konva.min.js"></script>
+		<style>
+			.header {
+				margin-bottom: 12px;
+			}
+		</style>
+</head>
+
+<body>
+	<div class="header">
+		<b> NFT Generation Example </b> <br>
+		<i> This website is a demonstration of automatic NFT Generation. <br>
+		It aims to be able to create NFTs randomly, asign meta data and retrieve NFT info such as owner, rarity & traits through either a unique hash or meta tags </i>
+	</div>
+	<div class="body">
+		<div class="form">
+			<input id="input_nft" placeholder="Image Hash" />
+			<button id="generate_nft"> Generate </button>
+		</div>
+		
+		<div id="image_nft" style="margin-top: 12px;"></div>
+	</div>
+</body>
+</html>
+
+<script>
+	function random_number(lower, upper) {
+		return Math.floor(Math.random() * (upper - lower) + lower);
+	}
+
+	<!-- These functions would be done server-end -->
+	function return_data(hash) {
+		hash = hash.toString();
+		let text = [];
+		const values = ["nil", "New York", "London", "Warsaw", "Berlin", "Paris", "Beijing", "Tokyo", "Prague", "Athens"];
+		// Loop through each number in our hash and asign a value to it.
+		for (var i = 0; i < hash.length; i++) {
+			text.push(values[hash.charAt(i)]);
+		}
+		return text;
+	}
+
+	function generate_hash() {
+		let hash = random_number(1, 9);
+		hash = hash + random_number(1, 9) * 10;
+		hash = hash + random_number(1, 9) * 100;
+		hash = hash + random_number(1, 9) * 1000;
+		hash = hash + random_number(1, 9) * 10000;
+		hash = hash + random_number(1, 9) * 100000;
+		
+		return hash;
+	}
+	<!-- End server-end functions -->
+	
+	$("#generate_nft").click(function() {
+		if ($("#input_nft").val() == "") {
+			var hash = generate_hash();
+		} else {
+			var hash = $("#input_nft").val();
+		}
+		var nft_data = return_data(hash);
+		
+		var stage = new Konva.Stage({
+			container: 'image_nft',
+			width: 256,
+			height: 256,
+		});
+
+		var layer = new Konva.Layer();
+
+		var back = new Konva.Rect({
+			x: 0,
+			y: 0,
+			width: 4096,
+			height: 4096,
+			fill: 'black',
+		});
+		
+		layer.add(back);
+
+		for (var i = 0; i < nft_data.length; i++) {
+			var d = new Konva.Text({
+				x: 6,
+				y: 6 + (i * 14),
+				text: nft_data[i],
+				fontSize: 13,
+				fontFamily: 'Calibri',
+				fill: '#f4f4f4',
+			});
+			layer.add(d);
+		}
+		
+		var watermark_hash = new Konva.Text({
+			x: 6,
+			y: 243,
+			text: hash,
+			fontSize: 13,
+			fontFamily: 'Calibri',
+			fill: '#f4f4f4',
+		});
+		
+		layer.add(watermark_hash);
+	  
+		stage.add(layer);
+	});
+</script>
