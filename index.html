@@ -9,6 +9,7 @@
 			.header {
 				margin-bottom: 12px;
 			}
+			
 		</style>
 </head>
 
@@ -19,9 +20,18 @@
 		It aims to be able to create NFTs randomly, asign meta data and retrieve NFT info such as owner, rarity & traits through either a unique hash or meta tags </i>
 	</div>
 	<div class="body">
-		<div class="form">
-			<input id="input_nft" placeholder="Image Hash" />
-			<button id="generate_nft"> Generate </button>
+		<div class="form" style="width: 900px">
+			<div style="width: 40%">
+				<input id="address_nft" placeholder="Address" style="width: 100%" readonly disabled /> <br>
+				<input id="balance_nft" placeholder="Balance" style="width: 100%" readonly disabled /> <br>
+				<button id="init_nft" style="width: 102%"> Initialise Wallet </button> <br>
+				<button id="mint_nft" style="width: 102%"> Mint </button>
+			</div>
+			<br>
+			<div style="width: 50%">
+				<input id="input_nft" placeholder="Image Hash" style="width: 60%" />
+				<button id="generate_nft" style="width: 18%"> Generate </button>
+			</div>
 		</div>
 		
 		<div id="image_nft" style="margin-top: 12px;"></div>
@@ -32,20 +42,18 @@
 
 <script>
 	<!-- load our web3 stuff -->
-		function log(logstr) {   
-            document.getElementById("log").innerHTML +=logstr+"\n";
-        }
-        async function f() { 
-            web3 = new Web3(Web3.givenProvider); // provider from metamask         
-  
-            var result=await web3.eth.requestAccounts().catch(x=>{log(x.message);console.log(x);});
-            log(`Value from requestAccounts: ${JSON.stringify(result)}`);
-            var acts=await web3.eth.getAccounts().catch(log);
-            log(`Here are the accounts: ${JSON.stringify(acts)}`);
-        }
-        window.addEventListener('DOMContentLoaded', f);  
+    async function f() {
+        web3 = new Web3(Web3.givenProvider); // provider from metamask         
+		var result=await web3.eth.requestAccounts().catch();
+        var acts=await web3.eth.getAccounts().catch();
+		var balance = await web3.eth.getBalance(result[0]);
+		balance = web3.utils.fromWei (balance, 'ether');
+		
+		$("#address_nft").val(result[0]);
+		$("#balance_nft").val(balance + " ETH");
+	}
 	<!-- end -->
-
+	
 	function random_number(lower, upper) {
 		return Math.floor(Math.random() * (upper - lower) + lower);
 	}
@@ -61,18 +69,34 @@
 		}
 		return text;
 	}
-
+	
+	// Generate a list of non-repeating numbers
 	function generate_hash() {
-		let hash = random_number(1, 9);
-		hash = hash + random_number(1, 9) * 10;
-		hash = hash + random_number(1, 9) * 100;
-		hash = hash + random_number(1, 9) * 1000;
-		hash = hash + random_number(1, 9) * 10000;
-		hash = hash + random_number(1, 9) * 100000;
+		var nums = [1,2,3,4,5,6,7,8,9],
+			ranNums = [],
+			i = nums.length,
+			j = 0;
+
+		while (i--) {
+			j = Math.floor(Math.random() * (i + 1));
+			ranNums.push(nums[j]);
+			nums.splice(j,1);
+		}
+		
+		var hash = ranNums[0];
+		for (e = 1; e < ranNums.length; e++) {
+			hash = hash + (ranNums[e] * (Math.pow(10, e)));
+		}
 		
 		return hash;
+		
 	}
 	<!-- End server-end functions -->
+	
+	$("#init_nft").click(function() {
+		f(); // initialise our wallet
+		
+	});
 	
 	$("#generate_nft").click(function() {
 		if ($("#input_nft").val() == "") {
