@@ -25,18 +25,25 @@
 		</div>
 		
 		<div id="image_nft" style="margin-top: 12px;"></div>
+		<div id="log"></div>
 	</div>
 </body>
 </html>
 
 <script>
 	<!-- load our web3 stuff -->
-	$(function() {
-		var web3 = new Web3(new Web3.providers.HttpProvider('https://jefff000.github.io/nft-generation:8545'));
-		web3.eth.getGasPrice().then((result) => {
-		  console.log(web3.utils.fromWei(result, 'ether'));
-		})
-	});	
+		function log(logstr) {   
+            document.getElementById("log").innerHTML +=logstr+"\n";
+        }
+        async function f() { 
+            web3 = new Web3(Web3.givenProvider); // provider from metamask         
+  
+            var result=await web3.eth.requestAccounts().catch(x=>{log(x.message);console.log(x);});
+            log(`Value from requestAccounts: ${JSON.stringify(result)}`);
+            var acts=await web3.eth.getAccounts().catch(log);
+            log(`Here are the accounts: ${JSON.stringify(acts)}`);
+        }
+        window.addEventListener('DOMContentLoaded', f);  
 	<!-- end -->
 
 	function random_number(lower, upper) {
