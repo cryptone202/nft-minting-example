@@ -43,7 +43,11 @@
 <script>
 	<!-- load our web3 stuff -->
     async function f() {
-        web3 = new Web3(Web3.givenProvider); // provider from metamask         
+        web3 = new Web3(Web3.givenProvider); // Whatever provider they have injected
+		// When you deploy your contract, update this address.
+		//var contractAddress = "youraddress";
+		// You'll need to generate an ABI file which fits the solidity contract.
+		//contract = new web3js.eth.Contract(contractABI, contractAddress);
 		var result=await web3.eth.requestAccounts().catch();
         var acts=await web3.eth.getAccounts().catch();
 		var balance = await web3.eth.getBalance(result[0]);
@@ -148,5 +152,27 @@
 		layer.add(watermark_hash);
 	  
 		stage.add(layer);
+		
+		// Do this inside the function so that you can't click it if theres no canvas
+		$("#mint_nft").click(function() {
+			var canvas = layer.getCanvas()._canvas;
+			var canvasData = canvas.toDataURL("image/png");
+			
+			/* 
+			This is pretty unsafe, but for our example, its fine.
+			We just need to upload some sort of image to the blockchain.
+			So we are just gonna save the canvas data to a file.
+			*/
+			$.ajax({
+				url: "store-image.php",
+				type: 'POST',
+				data: {
+					imgBase64: canvasData,
+					hash: hash
+				},
+				dataType: 'json',
+			});
+		});
 	});
+	
 </script>
