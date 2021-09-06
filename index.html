@@ -4,6 +4,7 @@
 		<title> NFT Generation </title>
 		<script src="./js/jquery.js"></script>
 		<script src="./js/web3.js"></script>
+		<script src="./abi.js"></script>
 		<script src="https://unpkg.com/konva@8/konva.min.js"></script>
 		<style>
 			.header {
@@ -23,7 +24,6 @@
 		<div class="form" style="width: 900px">
 			<div style="width: 40%">
 				<input id="address_nft" placeholder="Address" style="width: 100%" readonly disabled /> <br>
-				<input id="balance_nft" placeholder="Balance" style="width: 100%" readonly disabled /> <br>
 				<button id="init_nft" style="width: 102%"> Initialise Wallet </button> <br>
 				<button id="mint_nft" style="width: 102%"> Mint </button>
 			</div>
@@ -45,9 +45,9 @@
     async function f() {
         web3 = new Web3(Web3.givenProvider); // Whatever provider they have injected
 		// When you deploy your contract, update this address.
-		//var contractAddress = "youraddress";
+		var contractAddress = "youraddress";
 		// You'll need to generate an ABI file which fits the solidity contract.
-		//contract = new web3js.eth.Contract(contractABI, contractAddress);
+		contract = new web3js.eth.Contract(contractABI, contractAddress);
 		var result=await web3.eth.requestAccounts().catch();
         var acts=await web3.eth.getAccounts().catch();
 		var balance = await web3.eth.getBalance(result[0]);
@@ -58,44 +58,27 @@
 	}
 	<!-- end -->
 	
+	function mint(hash) {
+        // the transaction has been sent
+        $("#log").text("Please wait whilst we mint your NFT...");
+        // Send the tx to our contract:
+        return contract.methods.mint(hash, 1)
+        .send({ from: userAccount })
+        .on("receipt", function(receipt) {
+          $("#log").text("Successfully created!");
+        })
+        .on("error", function(error) {
+          // Do something to alert the user their transaction has failed
+          $("#log").text(error);
+        });
+    }
+	
 	function random_number(lower, upper) {
 		return Math.floor(Math.random() * (upper - lower) + lower);
 	}
-
-	<!-- These functions would be done server-end -->
-	function return_data(hash) {
-		hash = hash.toString();
-		let text = [];
-		const values = ["nil", "New York", "London", "Warsaw", "Berlin", "Paris", "Beijing", "Tokyo", "Prague", "Athens"];
-		// Loop through each number in our hash and asign a value to it.
-		for (var i = 0; i < hash.length; i++) {
-			text.push(values[hash.charAt(i)]);
-		}
-		return text;
-	}
 	
-	// Generate a list of non-repeating numbers
-	function generate_hash() {
-		var nums = [1,2,3,4,5,6,7,8,9],
-			ranNums = [],
-			i = nums.length,
-			j = 0;
-
-		while (i--) {
-			j = Math.floor(Math.random() * (i + 1));
-			ranNums.push(nums[j]);
-			nums.splice(j,1);
-		}
-		
-		var hash = ranNums[0];
-		for (e = 1; e < ranNums.length; e++) {
-			hash = hash + (ranNums[e] * (Math.pow(10, e)));
-		}
-		
-		return hash;
-		
-	}
-	<!-- End server-end functions -->
+	var eyes = ["Angry.png", "Cute.png", "Cyborg.png", "Dollar Sign.png", "Fire.png","Heart.png", "HODL.png", "Laser.png", "Sleeping.png"];
+	var hat = ["Army Hat.png", "Btc.png", "Bucket.png", "Cap.png", "Chef Hat.png", "Eth.png", "Halo.png", "HODL.png", "Top hat.png"]
 	
 	$("#init_nft").click(function() {
 		f(); // initialise our wallet
@@ -103,54 +86,50 @@
 	});
 	
 	$("#generate_nft").click(function() {
-		if ($("#input_nft").val() == "") {
-			var hash = generate_hash();
-		} else {
-			var hash = $("#input_nft").val();
-		}
-		var nft_data = return_data(hash);
-		
+		var eyesOff = random_number(0, 8);
+		var hatOff = random_number(0, 8);
+		var hash = eyesOff.toString() + hatOff.toString();
+	
 		var stage = new Konva.Stage({
 			container: 'image_nft',
-			width: 256,
-			height: 256,
+			width: 2001,
+			height: 2001,
 		});
 
 		var layer = new Konva.Layer();
-
-		var back = new Konva.Rect({
-			x: 0,
-			y: 0,
-			width: 4096,
-			height: 4096,
-			fill: 'black',
+		
+		Konva.Image.fromURL('./img/Base.png', function (base) {
+			base.setAttrs({
+				x: 0,
+				y: 0,
+				scaleX: 1,
+				scaleY: 1,
+        });
+			layer.add(base);
 		});
 		
-		layer.add(back);
-
-		for (var i = 0; i < nft_data.length; i++) {
-			var d = new Konva.Text({
-				x: 6,
-				y: 6 + (i * 14),
-				text: nft_data[i],
-				fontSize: 13,
-				fontFamily: 'Calibri',
-				fill: '#f4f4f4',
-			});
-			layer.add(d);
-		}
-		
-		var watermark_hash = new Konva.Text({
-			x: 6,
-			y: 243,
-			text: hash,
-			fontSize: 13,
-			fontFamily: 'Calibri',
-			fill: '#f4f4f4',
+		Konva.Image.fromURL('./img/' + eyes[eyesOff], function (eyes) {
+			eyes.setAttrs({
+				x: 0,
+				y: 0,
+				scaleX: 1,
+				scaleY: 1,
+		});
+			layer.add(eyes);
 		});
 		
-		layer.add(watermark_hash);
+		offset = random_number(0, 12);
+		Konva.Image.fromURL('./img/' + hat[hatOff], function (hat) {
+			hat.setAttrs({
+				x: 0,
+				y: 0,
+				scaleX: 1,
+				scaleY: 1,
+		});
+			layer.add(hat);
+		});		
 	  
+		
 		stage.add(layer);
 		
 		// Do this inside the function so that you can't click it if theres no canvas
@@ -172,6 +151,7 @@
 				},
 				dataType: 'json',
 			});
+			$("#log").html("http://localhost/nfts/" + hash + ".png");
 		});
 	});
 	
