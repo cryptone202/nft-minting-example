@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
 		<title> NFT Generation </title>
-		<script src="./js/jquery.js"></script>
-		<script src="./js/web3.js"></script>
-		<script src="./abi.js"></script>
+		<script src="js/jquery.js"></script>
+		<script src="js/web3.min.js"></script>
+		<script src="abi.js"></script>
 		<script src="https://unpkg.com/konva@8/konva.min.js"></script>
 		<style>
 			.header {
@@ -34,42 +34,14 @@
 			</div>
 		</div>
 		
-		<div id="image_nft" style="margin-top: 12px;"></div>
 		<div id="log"></div>
+		<div id="image_nft" style="margin-top: 12px;"></div>
 	</div>
 </body>
 </html>
 
 <script>
 	<!-- load our web3 stuff -->
-    async function f() {
-        web3 = new Web3(Web3.givenProvider); // Whatever provider they have injected
-		// When you deploy your contract, update this address.
-		var contractAddress = "youraddress";
-		// You'll need to generate an ABI file which fits the solidity contract.
-		contract = new web3js.eth.Contract(contractABI, contractAddress);
-		var result=await web3.eth.requestAccounts().catch();
-        var acts=await web3.eth.getAccounts().catch();
-		var balance = await web3.eth.getBalance(result[0]);
-		balance = web3.utils.fromWei (balance, 'ether');
-	}
-	<!-- end -->
-	
-	function mint(hash) {
-        // the transaction has been sent
-        $("#log").text("Please wait whilst we mint your NFT...");
-        // Send the tx to our contract:
-        return contract.methods.mint(hash, 1)
-        .send({ from: userAccount })
-        .on("receipt", function(receipt) {
-          $("#log").text("Successfully created!");
-        })
-        .on("error", function(error) {
-          // Do something to alert the user their transaction has failed
-          $("#log").text(error);
-        });
-    }
-	
 	function random_number(lower, upper) {
 		return Math.floor(Math.random() * (upper - lower) + lower);
 	}
@@ -77,79 +49,106 @@
 	var eyes = ["Angry.png", "Cute.png", "Cyborg.png", "Dollar Sign.png", "Fire.png","Heart.png", "HODL.png", "Laser.png", "Sleeping.png"];
 	var hat = ["Army Hat.png", "Btc.png", "Bucket.png", "Cap.png", "Chef Hat.png", "Eth.png", "Halo.png", "HODL.png", "Top hat.png"]
 	
+    async function f() {
+        web3 = new Web3(Web3.givenProvider); // Whatever provider they have injected
+		// When you deploy your contract, update this address.
+		var result=await web3.eth.requestAccounts().catch();
+        var acts=await web3.eth.getAccounts().catch();
+		
+		$("#address_nft").val(result[0]);
+
+		function mint(hash, uri) {
+			var contractAddress = "0xCA9B2C3B584FC92cE20F0BB260124dF3Ad25Fc43";
+			contract = new web3.eth.Contract(contractABI, contractAddress);
+			// the transaction has been sent
+			<!-- return contract.methods.mint(hash, 1, uri) -->
+			<!-- .send({ from: userAccount }) -->
+			<!-- .on("receipt", function(receipt) { -->
+			  <!-- $("#log").text("Successfully created!"); -->
+			<!-- }) -->
+			<!-- .on("error", function(error) { -->
+			  <!-- // Do something to alert the user their transaction has failed -->
+			  <!-- $("#log").text(error); -->
+			<!-- }); -->
+		}
+	
+	}			
+				
+		$("#generate_nft").click(function() {
+				var eyesOff = random_number(0, 8);
+				var hatOff = random_number(0, 8);
+				var hash = eyesOff.toString() + hatOff.toString();
+			
+				var layer = new Konva.Layer();
+			
+				var stage = new Konva.Stage({
+					container: 'image_nft',
+					width: 256,
+					height: 256,
+				});
+				
+				
+				Konva.Image.fromURL('./img/Base.png', function (base) {
+					base.setAttrs({
+						x: 0,
+						y: 0,
+						scaleX: 0.1,
+						scaleY: 0.1,
+				});
+					layer.add(base);
+				});
+				
+				Konva.Image.fromURL('./img/' + eyes[eyesOff], function (eyes) {
+					eyes.setAttrs({
+						x: 0,
+						y: 0,
+						scaleX: 0.1,
+						scaleY: 0.1,
+				});
+					layer.add(eyes);
+				});
+				
+				offset = random_number(0, 12);
+				Konva.Image.fromURL('./img/' + hat[hatOff], function (hat) {
+					hat.setAttrs({
+						x: 0,
+						y: 0,
+						scaleX: 0.1,
+						scaleY: 0.1,
+				});
+					layer.add(hat);
+				});		
+				
+				stage.add(layer);
+		
+	
+			$("#mint_nft").click(function() {
+					var canvas = layer.getCanvas()._canvas;
+					var canvasData = canvas.toDataURL("image/png");
+						
+					$.ajax({
+						url: "store.php",
+						type: 'POST',
+						data: {
+							imgBase64: canvasData,
+							hash: hash
+						},
+						dataType: 'json',
+						success: function(response) {
+							$("#log").html(response.image + "<br>" + JSON.stringify(response.attributes));
+							mint(hash, "https://localhost/nfts/"+hash+".json");
+						}
+					});
+				});		
+		
+		});
+	<!-- end -->
+	
 	$("#init_nft").click(function() {
 		f(); // initialise our wallet
-		
 	});
 	
-	$("#generate_nft").click(function() {
-		var eyesOff = random_number(0, 8);
-		var hatOff = random_number(0, 8);
-		var hash = eyesOff.toString() + hatOff.toString();
 	
-		var stage = new Konva.Stage({
-			container: 'image_nft',
-			width: 2001,
-			height: 2001,
-		});
 
-		var layer = new Konva.Layer();
-		
-		Konva.Image.fromURL('./img/Base.png', function (base) {
-			base.setAttrs({
-				x: 0,
-				y: 0,
-				scaleX: 1,
-				scaleY: 1,
-        });
-			layer.add(base);
-		});
-		
-		Konva.Image.fromURL('./img/' + eyes[eyesOff], function (eyes) {
-			eyes.setAttrs({
-				x: 0,
-				y: 0,
-				scaleX: 1,
-				scaleY: 1,
-		});
-			layer.add(eyes);
-		});
-		
-		offset = random_number(0, 12);
-		Konva.Image.fromURL('./img/' + hat[hatOff], function (hat) {
-			hat.setAttrs({
-				x: 0,
-				y: 0,
-				scaleX: 1,
-				scaleY: 1,
-		});
-			layer.add(hat);
-		});		
-	  
-		
-		stage.add(layer);
-		
-		// Do this inside the function so that you can't click it if theres no canvas
-		$("#mint_nft").click(function() {
-			var canvas = layer.getCanvas()._canvas;
-			var canvasData = canvas.toDataURL("image/png");
-			
-			/* 
-			This is pretty unsafe, but for our example, its fine.
-			We just need to upload some sort of image to the blockchain.
-			So we are just gonna save the canvas data to a file.
-			*/
-			$.ajax({
-				url: "store-image.php",
-				type: 'POST',
-				data: {
-					imgBase64: canvasData,
-					hash: hash
-				},
-				dataType: 'json',
-			});
-			$("#log").html("http://localhost/nfts/" + hash + ".png");
-		});
-	});
 	
 </script>

@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: <SPDX-License>" to each source file. Use "SPDX-License-Identifier: UNLICENSED
+//SPDX-License-Identifier: <SPDX-License>" to each source file. Use "SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
@@ -14,7 +14,6 @@ contract DrippyDolphins is ERC721Enumerable, Ownable {
     uint256 private reservedCount = 0;
     uint256 private maxReserveCount = 200;
     address private OwnerAddress = 0xCA9B2C3B584FC92cE20F0BB260124dF3Ad25Fc43; // Change this to yours.
-    address private ProjectAddress = 0x435E71FF5f32682B30b4A95cD0B672457DabA776; 
 
     string _baseTokenURI;   
     
@@ -44,7 +43,7 @@ contract DrippyDolphins is ERC721Enumerable, Ownable {
         require(OwnerAddress == msg.sender || owner() == msg.sender);
         _;
     }
-
+    
     function setMaximumAllowedTokens(uint256 _count) public onlyAuthorized {
         maximumAllowedTokensPerPurchase = _count;
     }
@@ -165,7 +164,7 @@ contract DrippyDolphins is ERC721Enumerable, Ownable {
     require(totalSupply() < MAX_MINTSUPPLY, 'All tokens have been minted');
     require(_count <= allowListMaxMint, 'Cannot purchase this many tokens');
     require(_allowListClaimed[msg.sender] + _count <= allowListMaxMint, 'Purchase exceeds max allowed');
-    require(msg.value >= basePri    ce * _count, 'Insuffient ETH amount sent.');
+    require(msg.value >= basePrice * _count, 'Insuffient ETH amount sent.');
 
     for (uint256 i = 0; i < _count; i++) {
       _allowListClaimed[msg.sender] += 1;
@@ -173,10 +172,17 @@ contract DrippyDolphins is ERC721Enumerable, Ownable {
       _safeMint(msg.sender, totalSupply());
     }
   }
+  
+function walletOfOwner(address _owner) external view returns(uint256[] memory) {
+    uint tokenCount = balanceOf(_owner);
+    uint256[] memory tokensId = new uint256[](tokenCount);
+    for(uint i = 0; i < tokenCount; i++){
+        tokensId[i] = tokenOfOwnerByIndex(_owner, i);
+    }
+    return tokensId;
+  }
 
   function withdraw() external onlyAuthorized {
-    uint balance = address(this).balance;
-    payable(OwnerAddress).transfer(balance);
     payable(owner()).transfer(address(this).balance);
   }
 }
