@@ -152,8 +152,8 @@ $attributes = [
 $metadata = array(
 	"Name" => "CryptoGull #" . $hash,
 	"Description" => "CryptoGulls is an example NFT project.",
-	"image" => "https://jefff000.github.io/nft-generation/meta/" . $hash,
-	"external_url" => "https://jefff000.github.io/nft-generation",
+	"image" => "https://darklight.xyz/meta/" . $hash . ".png",
+	"external_url" => "https://darklight.xyz/",
 	"attributes" => [
 		[
 			"trait_type" => "Type",

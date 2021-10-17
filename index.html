@@ -43,7 +43,7 @@
 		var acts = await web3.eth.getAccounts().catch();
 
 		// Update to oyur address
-		var contractAddress = "0x9785B682AAdA42523B76d06F3be65414bcd1a5F1";
+		var contractAddress = "0xD5B0bDCbF9bf1FADb2d57228CA4bd5b969839810";
 		contract = new web3.eth.Contract(abi, contractAddress);
 		contract.methods.price().call().then((data) => {
 			console.log(data);
