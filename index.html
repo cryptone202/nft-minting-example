@@ -1,154 +1,95 @@
-<!DOCTYPE html>
-<html lang="en">
+<html>
+
 <head>
-		<title> NFT Generation </title>
-		<script src="js/jquery.js"></script>
-		<script src="js/web3.min.js"></script>
-		<script src="abi.js"></script>
-		<script src="https://unpkg.com/konva@8/konva.min.js"></script>
-		<style>
-			.header {
-				margin-bottom: 12px;
-			}
-			
-		</style>
+	<script src="js/jquery.js"></script>
+	<script src="js/web3.min.js"></script>
+	<script src="js/abi.js"></script>
+	<link href="css/index.css" rel="stylesheet">
 </head>
 
 <body>
-	<div class="header">
-		<b> NFT Generation Example </b> <br>
-		<i> This website is a demonstration of automatic NFT Generation. <br>
-		It aims to be able to create NFTs randomly, asign meta data and retrieve NFT info such as owner, rarity & traits through either a unique hash or meta tags </i>
-	</div>
-	<div class="body">
-		<div class="form" style="width: 900px">
-			<div style="width: 40%">
-				<input id="address_nft" placeholder="Address" style="width: 100%" readonly disabled /> <br>
-				<button id="init_nft" style="width: 102%"> Initialise Wallet </button> <br>
-				<button id="mint_nft" style="width: 102%"> Mint </button>
-			</div>
-			<br>
-			<div style="width: 50%">
-				<input id="input_nft" placeholder="Image Hash" style="width: 60%" />
-				<button id="generate_nft" style="width: 18%"> Generate </button>
-			</div>
+	<h1> CryptoGulls </h1>
+	<div style="margin-left: 2px; min-width: 50%; max-width: 800px;">
+		<a> CryptoGulls are a set of uniquly generated NFTs based around Seagulls, with attributes like accessories,
+			hats, eyes and body types making each of them one of a kind. They are hosted on the Solana blockchain so do
+			not face the same downfalls NFTs based on the Ethereum blockchain do!</a> <br> <br>
+		<a><b style="color: rgb(184, 20, 20);">DISCLAIMER</b> This is an example project and is only made to show an
+		over-simplified version of how to interact with ethereum smart contracts just in the browser, without any fancy
+		frameworks. I do not suggest using this for production - at least the part that generates NFTs.</a> <br>
+		<button id="submit" style="margin: 5px 0px 15px 0px;"> Generate NFT </button> <br>
+		<img src="" id="preview" /> <br>
+		<div id="attributes" class="attributes">
+			Unique Hash: <a class="attr" id="hash"></a> <br>
+			Roll: <a class="attr" id="roll"></a> <br>
+			Type: <a class="attr" id="type"></a> <br>
+			Accessory: <a class="attr" id="accessory"></a> <br>
+			Eyes: <a class="attr" id="eyes"></a> <br>
+			Hat: <a class="attr" id="hat"></a> <br>
 		</div>
-		
-		<div id="log"></div>
-		<div id="image_nft" style="margin-top: 12px;"></div>
+		<br>
+		<div id="transaction" class="attributes" style="width: 550px;">
+			Transaction Hash: <a class="attr" id="txHash"></a> <br>
+		</div>
 	</div>
 </body>
+
 </html>
 
 <script>
-	<!-- load our web3 stuff -->
-	function random_number(lower, upper) {
-		return Math.floor(Math.random() * (upper - lower) + lower);
-	}
-	
-	var eyes = ["Angry.png", "Cute.png", "Cyborg.png", "Dollar Sign.png", "Fire.png","Heart.png", "HODL.png", "Laser.png", "Sleeping.png"];
-	var hat = ["Army Hat.png", "Btc.png", "Bucket.png", "Cap.png", "Chef Hat.png", "Eth.png", "Halo.png", "HODL.png", "Top hat.png"]
-	
-    async function f() {
-        web3 = new Web3(Web3.givenProvider); // Whatever provider they have injected
-		// When you deploy your contract, update this address.
-		var result=await web3.eth.requestAccounts().catch();
-        var acts=await web3.eth.getAccounts().catch();
-		
-		$("#address_nft").val(result[0]);
+	async function mint() {
+		$("#submit").text("Link your wallet...");
+		web3 = new Web3(Web3.givenProvider);
+		var result = await web3.eth.requestAccounts().catch();
+		var acts = await web3.eth.getAccounts().catch();
 
-		function mint(hash, uri) {
-			var contractAddress = "0xCA9B2C3B584FC92cE20F0BB260124dF3Ad25Fc43";
-			contract = new web3.eth.Contract(contractABI, contractAddress);
-			// the transaction has been sent
-			<!-- return contract.methods.mint(hash, 1, uri) -->
-			<!-- .send({ from: userAccount }) -->
-			<!-- .on("receipt", function(receipt) { -->
-			  <!-- $("#log").text("Successfully created!"); -->
-			<!-- }) -->
-			<!-- .on("error", function(error) { -->
-			  <!-- // Do something to alert the user their transaction has failed -->
-			  <!-- $("#log").text(error); -->
-			<!-- }); -->
-		}
-	
-	}			
-				
-		$("#generate_nft").click(function() {
-				var eyesOff = random_number(0, 8);
-				var hatOff = random_number(0, 8);
-				var hash = eyesOff.toString() + hatOff.toString();
-			
-				var layer = new Konva.Layer();
-			
-				var stage = new Konva.Stage({
-					container: 'image_nft',
-					width: 256,
-					height: 256,
-				});
-				
-				
-				Konva.Image.fromURL('./img/Base.png', function (base) {
-					base.setAttrs({
-						x: 0,
-						y: 0,
-						scaleX: 0.1,
-						scaleY: 0.1,
-				});
-					layer.add(base);
-				});
-				
-				Konva.Image.fromURL('./img/' + eyes[eyesOff], function (eyes) {
-					eyes.setAttrs({
-						x: 0,
-						y: 0,
-						scaleX: 0.1,
-						scaleY: 0.1,
-				});
-					layer.add(eyes);
-				});
-				
-				offset = random_number(0, 12);
-				Konva.Image.fromURL('./img/' + hat[hatOff], function (hat) {
-					hat.setAttrs({
-						x: 0,
-						y: 0,
-						scaleX: 0.1,
-						scaleY: 0.1,
-				});
-					layer.add(hat);
-				});		
-				
-				stage.add(layer);
-		
-	
-			$("#mint_nft").click(function() {
-					var canvas = layer.getCanvas()._canvas;
-					var canvasData = canvas.toDataURL("image/png");
-						
+		// Update to oyur address
+		var contractAddress = "0x9785B682AAdA42523B76d06F3be65414bcd1a5F1";
+		contract = new web3.eth.Contract(abi, contractAddress);
+		contract.methods.price().call().then((data) => {
+			console.log(data);
+			$("#submit").text("Initiating Mint...");
+			contract.methods.mint(1).send({
+				from: result[0],
+				value: data
+			}).then(function (receipt) {
+				console.log(receipt);
+				$("#submit").text("Payment received!");
+				contract.methods.totalSupply().call().then((supply) => {
+					console.log(supply);
+					$("#submit").text("Creating NFT...");
 					$.ajax({
-						url: "store.php",
+						url: 'create.php',
 						type: 'POST',
-						data: {
-							imgBase64: canvasData,
-							hash: hash
-						},
+						data: { supply: supply },
 						dataType: 'json',
-						success: function(response) {
-							$("#log").html(response.image + "<br>" + JSON.stringify(response.attributes));
-							mint(hash, "https://localhost/nfts/"+hash+".json");
+						success: function (response) {
+							$("#preview").fadeOut("slow", function () {
+								$("#hash").text(response.attributes[0]["Unique Hash"]);
+								$("#type").text(response.attributes[1]["Type"]);
+								$("#accessory").text(response.attributes[2]["Accessory"]);
+								$("#hat").text(response.attributes[4]["Hat"]);
+								$("#eyes").text(response.attributes[3]["Eyes"]);
+								$("#roll").text(response.attributes[5]["Roll"]);
+								$("#preview").attr("src", response.url);
+								$("#preview").fadeIn("slow");
+								$("#txHash").text(receipt.transactionHash);
+								$("#attributes").fadeIn("slow");
+								$("#transaction").fadeIn("slow");
+								$("#submit").text("NFT Created!");
+							});
 						}
 					});
-				});		
-		
+				});
+			});
 		});
-	<!-- end -->
-	
-	$("#init_nft").click(function() {
-		f(); // initialise our wallet
-	});
-	
-	
 
-	
+	}
+
+	$("#submit").click(function (ev) {
+		ev.preventDefault();
+		mint();
+	});
 </script>
+</body>
+
+</html>

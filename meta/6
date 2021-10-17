@@ -1,0 +1,28 @@
+{
+    "Name": "CryptoGull #6",
+    "Description": "CryptoGulls is an example NFT project.",
+    "image": "https:\/\/jefff000.github.io\/nft-generation\/meta\/6",
+    "external_url": "https:\/\/jefff000.github.io\/nft-generation",
+    "attributes": [
+        {
+            "trait_type": "Type",
+            "value": "Gull"
+        },
+        {
+            "trait_type": "Accessory",
+            "value": "None"
+        },
+        {
+            "trait_type": "Eyes",
+            "value": "Fashionista"
+        },
+        {
+            "trait_type": "Hat",
+            "value": "Red Beanie"
+        },
+        {
+            "trait_type": "Roll",
+            "value": "81.5  95.7  20.9  62.2"
+        }
+    ]
+}

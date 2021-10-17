@@ -1,0 +1,35 @@
+None: 17,3%
+Cowboy: 3,60%
+Thief Cap: 3,50%
+Beret: 3,50%
+Green Headphones: 3,45%
+Red Headphones: 3,40%
+Red Beanie: 3,35%
+Blue Beanie: 3,35%
+Blue Baseball Cap: 3,25%
+Purple Baseball Cap: 3,25%
+Black Baseball Cap: 3,25%
+Police Officer: 3,10%
+Ross Afro: 3%
+McDonalds Employee: 2,95%
+Deckhand: 2,80%
+Buccaneer: 2,70%
+Jester: 2,70%
+Rice Collector: 2,65%
+Viking: 2,55%
+Candlestick: 2,45%
+King Bong: 2,35%
+Burger King: 2,15%
+Angel: 2%
+Devil: 1,95%
+Sanchez: 1,85%
+Sad Past: 1,8%
+Catch 'Em All: 1,75%
+Imperator: 1,70%
+General: 1,65%
+Good Trip: 1,50%
+Bad Trip: 1,40%
+Franchise King: 1,10%
+Pharaoh: 1%
+Zombie: 0.9%
+To The Moon: 0,80%

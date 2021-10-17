@@ -1,0 +1,9 @@
+Gull: 55%
+Pink Gull: 10%
+Green Gull: 10%
+Blue Gull: 10%
+Zombie Gull: 5%
+Ape Gull: 4%
+Alien Gull: 3%
+Steel Gull: 2%
+Golden Gull: 1%

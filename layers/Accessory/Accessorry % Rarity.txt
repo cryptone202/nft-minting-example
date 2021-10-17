@@ -1,0 +1,20 @@
+None: 42,45%
+Gangsta: 4,75%
+Pink Pendant: 4,6%
+Scarf: 4,55%
+Reporter: 4,5%
+Red Bandana: 3,45%
+Gentleman: 3,3%
+Rich Gentleman: 3,25%
+Lifebouy: 3,15%
+Hawaiian Mood: 3%
+Ciggarette: 2,9%
+Covid: 2,7%
+Black Bandana: 2,65%
+True Elegant: 2,6%
+Wizard Gem: 2,5%
+Riddle Solver: 2,4%
+Fries Lover: 2,2%
+007: 1,85%
+Guiltless: 1,7%
+Banana: 1,5%

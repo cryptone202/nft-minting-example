@@ -1,0 +1,21 @@
+None: 22,4%
+Swimming Goggles: 5,4%
+CSI Glasses: 5,35%
+Special Agent: 5,25%
+Nerd: 5,2%
+Climber Glasses: 5,1%
+Night Vision: 5%
+Snorkeling Mask: 4,65%
+Fashionista: 4,25%
+3D Glasses: 4,1%
+Wisdom Mark: 4%
+True Fashionista: 3,7%
+Strenght Mark: 3,5%
+CyberPunk: 3,4%
+Scar: 3,2%
+Romantic: 3%
+Sad Boi: 2,9%
+Gimmie Your Wallet: 2,8%
+Joker: 2,6%
+Extermination 2,4%
+Over 9000: 1,8%

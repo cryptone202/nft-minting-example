@@ -1,0 +1,9 @@
+*Background: It's a layer for image only, we don't want it as a trait. It has to be on every image*
+
+1. Type: It's the base layer 
+
+2. Eyes: Layer on "Type" are eyes 
+
+3. Hat: Layer on "Eyes" & "Type" are Hat 
+
+4. Accessory: Layer on "Eyes" & "Type" & "Hat" are Accessory
